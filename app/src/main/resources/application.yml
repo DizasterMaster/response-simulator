@@ -1,0 +1,23 @@
+server:
+  port: 14444
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG
+
+endpoints:
+  getMapping:
+    example:
+      endpoint: '/example/foo/*'
+      responseStatus: 200
+      responseHeaders:
+        Content-Type: application/json
+      responseBody: '{ "success" : true }'
+  postMapping: { }
+  patchMapping: { }
+  putMapping: { }
+  deleteMapping: { }
