@@ -6,18 +6,10 @@
         <groupId>dev.mock.response-simulator</groupId>
         <artifactId>response-simulator</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>response-simulator-spi-engine</artifactId>
-    <name>[Service] Response Simulator SPI Web</name>
-
-    <dependencies>
-        <dependency>
-            <groupId>dev.mock.response-simulator</groupId>
-            <artifactId>response-simulator-config</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-    </dependencies>
+    <artifactId>response-simulator-api</artifactId>
+    <name>[Service] Response Simulator API</name>
+    <packaging>pom</packaging>
 
 </project>

@@ -1,6 +1,7 @@
 package dev.mock.response.simulator.service;
 
 import dev.mock.response.simulator.config.EndpointConfig;
+import jakarta.annotation.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -12,24 +13,26 @@ public class EndpointMatcher
 {
 
     /**
-     * Finds a matching endpoint pattern for the given request URI based on the provided endpoint configuration map.
+     * Finds a matching endpoint pattern from the configuration map based on the provided request URI.
      * <p>
-     * This method iterates through the endpoint configurations and attempts to match the {@code requestUri}
-     * against any configured endpoint patterns that contain a wildcard (`*`). Each asterisk in an endpoint
+     * This method iterates through the endpoint configurations in the {@code endpointConfigMap} and attempts to match the {@code requestUri}
+     * against any endpoint pattern.
+     * </p>
+     * For patterns with a wildcard '*', each asterisk in an endpoint
      * is treated as a placeholder for a single word segment (alphanumeric characters), which is translated into
      * a regular expression matching {@code \w+}. Dashes in the {@code requestUri} are removed before matching.
      * </p>
-     * If a match is found, the corresponding endpoint pattern (with the wildcard) is returned.
-     * If no match is found, the original {@code requestUri} is returned as-is.
+     * If a match is found, the corresponding endpoint pattern is returned.
      * </p>
      *
     * @param requestUri             The URI from the incoming request
     * @param endpointConfigMap      A map of endpoint identifiers to their {@link EndpointConfig}, where some endpoints may contain wildcards
     *
-     * @return                      The matching endpoint pattern if found; otherwise, the original {@code requestUri}
+     * @return                      The matching endpoint pattern if found; Otherwise {@code null}
     */
-    public String findMatchingEndpoint( final String requestUri,
-                                        final Map<String, EndpointConfig> endpointConfigMap )
+    @Nullable
+    public String findMatchingEndpointPattern( final String requestUri,
+                                               final Map<String, EndpointConfig> endpointConfigMap )
     {
         for ( final EndpointConfig config : endpointConfigMap.values( ) )
         {
@@ -53,8 +56,12 @@ public class EndpointMatcher
                     return endpoint;
                 }
             }
+            else if ( endpoint.equals( requestUri ) )
+            {
+                return endpoint;
+            }
         }
 
-        return requestUri;
+        return null;
     }
 }

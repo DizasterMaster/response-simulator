@@ -9,14 +9,13 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>response-simulator-spi-engine</artifactId>
-    <name>[Service] Response Simulator SPI Web</name>
+    <artifactId>response-simulator-api-web</artifactId>
+    <name>[Service] Response Simulator API WEB</name>
 
     <dependencies>
         <dependency>
-            <groupId>dev.mock.response-simulator</groupId>
-            <artifactId>response-simulator-config</artifactId>
-            <version>${project.parent.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 

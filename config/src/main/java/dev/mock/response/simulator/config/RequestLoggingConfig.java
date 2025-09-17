@@ -26,8 +26,8 @@ public class RequestLoggingConfig
     {
 
         @Override
-        protected void afterRequest( HttpServletRequest request,
-                                     String message )
+        protected void afterRequest( final HttpServletRequest request,
+                                     final String message )
         {
             // Override and do nothing to skip after-request logging
         }

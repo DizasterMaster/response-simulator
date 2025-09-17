@@ -2,6 +2,7 @@ package dev.mock.response.simulator.service;
 
 import dev.mock.response.simulator.config.EndpointConfig;
 import dev.mock.response.simulator.config.EndpointMappingConfig;
+import dev.mock.response.simulator.service.exception.InternalProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 
 import java.util.Map;
-import java.util.Optional;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -33,34 +33,23 @@ public class DefaultHttpHttpRequestHandler
         final String requestUri = request.getRequestURI( );
         final Map<String, EndpointConfig> endpointConfigMap = getEndpointConfigMapBasedOnRequestType( request );
 
-        final String endpoint = endpointMatcher.findMatchingEndpoint( requestUri,
-                                                                      endpointConfigMap );
+        final String endpoint = endpointMatcher.findMatchingEndpointPattern( requestUri,
+                                                                             endpointConfigMap );
 
-        final Optional<Map.Entry<String, EndpointConfig>> optionalEndpointConfig = endpointConfigMap.entrySet( )
-                                                                                                    .stream( )
-                                                                                                    .filter( entry -> entry.getValue( )
-                                                                                                                           .getEndpoint( )
-                                                                                                                           .equals( endpoint ) )
-                                                                                                    .findFirst( );
+        final EndpointConfig endpointConfig = endpointConfigMap.entrySet( )
+                                                               .stream( )
+                                                               .filter( entry -> entry.getValue( )
+                                                                                      .getEndpoint( )
+                                                                                      .equals( endpoint ) )
+                                                               .findFirst( )
+                                                               .orElseThrow( ( ) -> new InternalProcessingException( String.format( "No mapping found for request method: %s URI: %s",
+                                                                                                                                    request.getMethod( ),
+                                                                                                                                    requestUri ) ) )
+                                                               .getValue( );
 
-        if ( optionalEndpointConfig.isPresent( ) )
-        {
-            final EndpointConfig endpointConfig = optionalEndpointConfig.get( )
-                                                                        .getValue( );
-
-            log.info( "SENDING RESPONSE: {}",
-                      endpointConfig.getResponseBody( ) );
-            return new ResponseEntity<>( endpointConfig.getResponseBody( ),
-                                         buildHeaders( endpointConfig.getResponseHeaders( ) ),
-                                         HttpStatus.valueOf( getResponseCode( endpointConfig.getResponseStatus( ) ) ) );
-        }
-        else
-        {
-            log.error( "No mapping found for request method: {} endpoint: {}",
-                       request.getMethod( ),
-                       requestUri );
-            return new ResponseEntity<>( HttpStatus.BAD_REQUEST );
-        }
+        return new ResponseEntity<>( endpointConfig.getResponseBody( ),
+                                     buildHeaders( endpointConfig.getResponseHeaders( ) ),
+                                     HttpStatus.valueOf( getResponseCode( endpointConfig.getResponseStatus( ) ) ) );
     }
 
     private Map<String, EndpointConfig> getEndpointConfigMapBasedOnRequestType( final HttpServletRequest request )

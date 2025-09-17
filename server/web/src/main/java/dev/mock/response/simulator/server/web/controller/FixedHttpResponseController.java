@@ -83,7 +83,8 @@ public class FixedHttpResponseController
                                             defaultHttpHttpRequestHandler,
                                             DefaultHttpHttpRequestHandler.class.getDeclaredMethod( "handleRequest",
                                                                                                    HttpServletRequest.class ) );
-        } catch ( final NoSuchMethodException e )
+        }
+        catch ( final NoSuchMethodException e )
         {
             log.error( "Couldn't find a valid handler for request method: {} and endpoint: {}",
                        requestMethod.name( ),

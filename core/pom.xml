@@ -33,5 +33,19 @@
             <artifactId>response-simulator-config</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>dev.mock.response-simulator</groupId>
+            <artifactId>response-simulator-api-web</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- Tests -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.12.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
